@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         PROJECT_ID = 'testapp-472401'
-        GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-service-account') // Service account credential
     }
 
     stages {
@@ -15,34 +14,37 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                script {
-                    // Initialize the Terraform working directory
-                    withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-                        sh 'gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS'
-                        sh 'terraform init'
-                    }
+                withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                    sh '''
+                        echo "🔐 Authenticating with GCP..."
+                        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+                        gcloud config set project $PROJECT_ID
+
+                        echo "🚀 Initializing Terraform..."
+                        terraform init
+                    '''
                 }
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                script {
-                    // Run Terraform plan
-                    withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-                        sh 'terraform plan'
-                    }
+                withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                    sh '''
+                        echo "📋 Running Terraform Plan..."
+                        terraform plan
+                    '''
                 }
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                script {
-                    // Apply Terraform changes
-                    withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
-                        sh 'terraform apply -auto-approve'
-                    }
+                withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                    sh '''
+                        echo "⚙️ Applying Terraform Configuration..."
+                        terraform apply -auto-approve
+                    '''
                 }
             }
         }
@@ -50,13 +52,13 @@ pipeline {
 
     post {
         always {
-            echo 'Cleaning up...'
+            echo '🧹 Cleaning up workspace...'
         }
         success {
-            echo 'Deployment Successful'
+            echo '✅ Deployment Successful!'
         }
         failure {
-            echo 'Deployment Failed'
+            echo '❌ Deployment Failed!'
         }
     }
 }
