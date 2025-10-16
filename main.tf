@@ -13,6 +13,6 @@ resource "google_compute_subnetwork" "subnet" {
 }
 
 resource "google_storage_bucket" "importbucket07" {
-  name = "importbucket07"
+  name = "bucketjenkinsterracreated"
   location = "US"
 }
