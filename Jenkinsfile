@@ -18,6 +18,7 @@ pipeline {
                 script {
                     // Initialize the Terraform working directory
                     withCredentials([file(credentialsId: 'gcp-service-account', variable: 'GOOGLE_APPLICATION_CREDENTIALS')]) {
+                        sh 'gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS'
                         sh 'terraform init'
                     }
                 }
