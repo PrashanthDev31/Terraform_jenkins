@@ -2,14 +2,14 @@ pipeline {
     agent any
 
     environment {
-        PROJECT_ID = 'rock-position-455809-m2'
+        PROJECT_ID = 'testapp-472401'
         GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-service-account') // Service account credential
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/AneilRapole/terraform_jenkins.git'
+                git branch: 'main', url: 'https://github.com/PrashanthDev31/Terraform_jenkins'
             }
         }
 
