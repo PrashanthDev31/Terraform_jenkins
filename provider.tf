@@ -1,4 +1,4 @@
 provider "google" {
-    project     = "rock-position-455809-m2"
+    project     = "testapp-472401"
   region      = var.region
 }
