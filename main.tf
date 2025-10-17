@@ -8,7 +8,7 @@ resource "google_compute_network" "vpc_network-practicecreation" {
 resource "google_compute_subnetwork" "subnet-practicecreation" {
   name          = "subnet-1-oct17-7am"
   region        = "us-central1"  # Updated region
-  network       = google_compute_network.vpc-network-oct17-7am.name
+  network       = google_compute_network.vpc_network-practicecreation.name
   ip_cidr_range = "10.0.0.0/24"
 }
 
